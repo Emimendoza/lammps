@@ -28,7 +28,10 @@ set(kokkos_ARCH_HOSTARCH ICX)
 set(kokkos_ARCH_GPUARCH AMPERE80)
 set(kokkos_ENABLE_CUDA yes)
 set(kokkos_ENABLE_OPENMP yes)
-
+# disable jpeg, png, and ffmpeg
+set(WITH_JPEG no)
+set(WITH_PNG no)
+set(WITH_FFMPEG no)
 ########################################
 project(lammps CXX)
 set(SOVERSION 0)
