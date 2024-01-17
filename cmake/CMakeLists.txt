@@ -18,7 +18,18 @@ if(POLICY CMP0135)
 endif()
 
 ########################################
+# Configuring to run on the Palmetto cluster
+# Specifically the A100 | Xeon 8358 systems
 
+# Set compiler target arch
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=icelake-server")
+# kokkos arch
+set(kokkos_ARCH_HOSTARCH ICX)
+set(kokkos_ARCH_GPUARCH AMPERE80)
+set(kokkos_ENABLE_CUDA yes)
+set(kokkos_ENABLE_OPENMP yes)
+
+########################################
 project(lammps CXX)
 set(SOVERSION 0)
 get_property(BUILD_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
