@@ -67,7 +67,7 @@ if(GPU_API STREQUAL "CUDA")
   option(CUDA_BUILD_MULTIARCH "Enable building CUDA kernels for all supported GPU architectures" ON)
   mark_as_advanced(GPU_BUILD_MULTIARCH)
 
-  set(GPU_ARCH "sm_50" CACHE STRING "LAMMPS GPU CUDA SM primary architecture (e.g. sm_60)")
+  set(GPU_ARCH "sm_90" CACHE STRING "LAMMPS GPU CUDA SM primary architecture (e.g. sm_60)")
 
   # ensure that no *cubin.h files exist from a compile in the lib/gpu folder
   file(GLOB GPU_LIB_OLD_CUBIN_HEADERS CONFIGURE_DEPENDS ${LAMMPS_LIB_SOURCE_DIR}/gpu/*_cubin.h)

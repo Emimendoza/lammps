@@ -2,7 +2,7 @@
 ########################################
 # CMake build system
 # This file is part of LAMMPS
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 ########################################
 # set policy to silence warnings about ignoring <PackageName>_ROOT but use it
 if(POLICY CMP0074)
@@ -20,20 +20,68 @@ endif()
 ########################################
 # Configuring to run on the Palmetto cluster
 # Specifically the A100 | Xeon 8358 systems
+# OpenMP
+# Set OpenMP flags for C
+#set(OpenMP_C_FLAGS "-fopenmp=libomp -I/usr/include/omp.h")
 
+# Set OpenMP flags for C++
+#set(OpenMP_CXX_FLAGS "-fopenmp=libomp -Xpreprocessor -fopenmp /usr/lib/libomp.so -I/usr/include/omp.h")
+#set(OpenMP_CXX_INCLUDE_DIRS "/usr/include/omp.h" CACHE STRING "" FORCE)
+# Set OpenMP libraries for both C and C++
+#set(OpenMP_C_LIB_NAMES "libomp")
+#set(OpenMP_CXX_LIB_NAMES "libomp")
+
+# Set OpenMP library paths for both C and C++
+#set(OpenMP_libomp_LIBRARY "/usr/lib/libomp.so")
+
+# set compiler as nvcc with clang++
+set(CMAKE_CXX_COMPILER clang-17++)
+set(CMAKE_CUDA_COMPILER nvcc)
+set(CMAKE_C_COMPILER clang-17)
+set(MPI_CXX "clang-17++" CACHE STRING "" FORCE)
+set(MPI_CXX_COMPILER "mpicxx" CACHE STRING "" FORCE)
+set(CMAKE_C_FLAGS"${CMAKE_C_FLAGS} -march=x86-64 -static-libgcc -static -mtune=icelake-client")
+# turn on cuda separable compilation
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang-17++ -arch=sm_80 -Xcompiler -march=x86-64 -Xcompiler -mtune=icelake-client -Xcompiler -static-libgcc -Xcompiler -static-libstdc++")
 # Set compiler target arch
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=icelake-server")
-# kokkos arch
-set(kokkos_ARCH_HOSTARCH ICX)
-set(kokkos_ARCH_GPUARCH AMPERE80)
-set(kokkos_ENABLE_CUDA yes)
-set(kokkos_ENABLE_OPENMP yes)
-# disable jpeg, png, and ffmpeg
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xclang -fcuda-allow-variadic-functions -march=x86-64 -mtune=icelake-client")
+# use static linking
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static")
+# kokkos
+set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_CUDA ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_PTHREAD ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_LIBNUMA ON CACHE BOOL "" FORCE)
+set(Kokkos_ARCH_ICX ON CACHE BOOL "" FORCE)
+set(Kokkos_ARCH_AMPERE80 ON CACHE BOOL "" FORCE)
+set(Kokkos_ENABLE_SERIAL ON CACHE BOOL "" FORCE)
+# Other packages we want
+set(PACKAGES_WE_WANT
+        KSPACE
+        MANYBODY
+        MC
+        MEAM
+        MOLECULE
+        PHONON
+        RIGID
+        GPU)
+foreach(PKG ${PACKAGES_WE_WANT})
+  set(PKG_${PKG} ON CACHE BOOL "" FORCE)
+endforeach()
+# Set cuda as our gpu api
+set(GPU_API "cuda" CACHE STRING "" FORCE)
+set(CUDA_ARCH "sm_80" CACHE STRING "" FORCE)
+set(CUDA_MPS_SUPPORT ON CACHE BOOL "" FORCE)
+# disable jpeg, png, and ffmpeg, python
 set(WITH_JPEG no)
 set(WITH_PNG no)
 set(WITH_FFMPEG no)
+set(PKG_PYTHON OFF CACHE BOOL "" FORCE)
+# Tell cmake to search for libraries in (project root)/static
+
 ########################################
-project(lammps CXX)
+project(lammps CXX CUDA)
 set(SOVERSION 0)
 get_property(BUILD_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 

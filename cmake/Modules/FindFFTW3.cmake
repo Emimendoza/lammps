@@ -10,9 +10,12 @@
 find_package(PkgConfig)
 
 pkg_check_modules(PC_FFTW3 fftw3)
-find_path(FFTW3_INCLUDE_DIR fftw3.h HINTS ${PC_FFTW3_INCLUDE_DIRS})
-find_library(FFTW3_LIBRARY NAMES fftw3 HINTS ${PC_FFTW3_LIBRARY_DIRS})
-find_library(FFTW3_OMP_LIBRARY NAMES fftw3_omp HINTS ${PC_FFTW3_LIBRARY_DIRS})
+#find_path(FFTW3_INCLUDE_DIR fftw3.h HINTS ${PC_FFTW3_INCLUDE_DIRS})
+#find_library(FFTW3_LIBRARY NAMES fftw3 HINTS ${PC_FFTW3_LIBRARY_DIRS})
+#find_library(FFTW3_OMP_LIBRARY NAMES fftw3_omp HINTS ${PC_FFTW3_LIBRARY_DIRS})
+set(FFTW3_INCLUDE_DIR "/home/mephi/Documents/Code/fftw-3.3.10/api")
+set(FFTW3_LIBRARY "${CMAKE_SOURCE_DIR}/static/libfftw3.a")
+set(FFTW3_OMP_LIBRARY "${CMAKE_SOURCE_DIR}/static/libfftw3_omp.a")
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set FFTW3_FOUND to TRUE
