@@ -35,19 +35,23 @@ endif()
 #set(OpenMP_libomp_LIBRARY "/usr/lib/libomp.so")
 
 # set compiler as nvcc with clang++
-set(CMAKE_CXX_COMPILER clang-17++)
+set(CMAKE_CXX_COMPILER /home/emendoz/clang_install/bin/clang++)
 set(CMAKE_CUDA_COMPILER nvcc)
-set(CMAKE_C_COMPILER clang-17)
-set(MPI_CXX "clang-17++" CACHE STRING "" FORCE)
+set(CMAKE_C_COMPILER /home/emendoz/clang_install/bin/clang)
+set(MPI_CXX "/home/emendoz/clang_install/bin/clang++" CACHE STRING "" FORCE)
 set(MPI_CXX_COMPILER "mpicxx" CACHE STRING "" FORCE)
-set(CMAKE_C_FLAGS"${CMAKE_C_FLAGS} -march=x86-64 -static-libgcc -static -mtune=icelake-client")
+set(CMAKE_C_FLAGS"${CMAKE_C_FLAGS} -march=x86-64 -static-libgcc -mtune=icelake-client")
+# Add the include dir for the clang compiler
+include_directories(/home/emendoz/clang_install/include)
+# add the lib dir for the clang compiler
+link_directories(/home/emendoz/clang_install/lib)
 # turn on cuda separable compilation
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin clang-17++ -arch=sm_80 -Xcompiler -march=x86-64 -Xcompiler -mtune=icelake-client -Xcompiler -static-libgcc -Xcompiler -static-libstdc++")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin /home/emendoz/clang_install/bin/clang++ -arch=sm_80 -Xcompiler -march=x86-64 -Xcompiler -mtune=icelake-client")
 # Set compiler target arch
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xclang -fcuda-allow-variadic-functions -march=x86-64 -mtune=icelake-client")
 # use static linking
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 # kokkos
 set(PKG_KOKKOS ON CACHE BOOL "" FORCE)
 set(Kokkos_ENABLE_CUDA ON CACHE BOOL "" FORCE)
