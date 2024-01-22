@@ -33,7 +33,10 @@ endif()
 
 # Set OpenMP library paths for both C and C++
 #set(OpenMP_libomp_LIBRARY "/usr/lib/libomp.so")
-
+# Add the include dir for the clang compiler
+include_directories(/home/emendoz/clang_install/include)
+# add the lib dir for the clang compiler
+link_directories(/home/emendoz/clang_install/lib)
 # set compiler as nvcc with clang++
 set(CMAKE_CXX_COMPILER /home/emendoz/clang_install/bin/clang++)
 set(CMAKE_CUDA_COMPILER nvcc)
@@ -41,10 +44,6 @@ set(CMAKE_C_COMPILER /home/emendoz/clang_install/bin/clang)
 set(MPI_CXX "/home/emendoz/clang_install/bin/clang++" CACHE STRING "" FORCE)
 set(MPI_CXX_COMPILER "mpicxx" CACHE STRING "" FORCE)
 set(CMAKE_C_FLAGS"${CMAKE_C_FLAGS} -march=x86-64 -static-libgcc -mtune=icelake-client")
-# Add the include dir for the clang compiler
-include_directories(/home/emendoz/clang_install/include)
-# add the lib dir for the clang compiler
-link_directories(/home/emendoz/clang_install/lib)
 # turn on cuda separable compilation
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -ccbin /home/emendoz/clang_install/bin/clang++ -arch=sm_80 -Xcompiler -march=x86-64 -Xcompiler -mtune=icelake-client")
